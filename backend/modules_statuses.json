@@ -1,0 +1,6 @@
+{
+    "Core": true,
+    "MasterData": true,
+    "Inventory": true,
+    "Inspection": true
+}
