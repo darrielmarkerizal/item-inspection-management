@@ -2,24 +2,25 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Modules\Inspection\Database\Seeders\InspectionDatabaseSeeder;
+use Modules\Inventory\Database\Seeders\InventoryDatabaseSeeder;
+use Modules\MasterData\Database\Seeders\MasterDataDatabaseSeeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
+     *
+     * Order matters: master data first, then inventory (depends on master),
+     * then sample inspections (depend on both).
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            MasterDataDatabaseSeeder::class,
+            InventoryDatabaseSeeder::class,
+            InspectionDatabaseSeeder::class,
         ]);
     }
 }
