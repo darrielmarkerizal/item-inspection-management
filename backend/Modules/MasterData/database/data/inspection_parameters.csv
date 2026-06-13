@@ -1,0 +1,8 @@
+name,code,description
+Visual Thread,VT,Visual inspection of pin and box thread connections for damage galling or corrosion
+Visual Body,VB,Visual inspection of pipe body surface for dents pitting and mechanical damage
+Full Length Drift,FLD,Pass API drift mandrel through full pipe length to verify internal clearance
+Dimensional Inspection,DIM,Measure OD wall thickness and length against API 5CT specification
+EMI,EMI,Electromagnetic inspection for transverse and longitudinal wall defects
+Hydrostatic Test,HYDRO,Hydrostatic pressure test to verify pipe body and connection integrity
+Thread Gauging,TG,Gauge thread connection standoff per API 5B

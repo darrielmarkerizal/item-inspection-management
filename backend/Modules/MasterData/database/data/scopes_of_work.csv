@@ -1,0 +1,5 @@
+name,service_type,description
+New Arrival Full Inspection,new_arrival,Full inspection scope applied to newly arrived OCTG tubulars
+Maintenance Re-Inspection,maintenance,Re-inspection scope for used tubulars returning from the field
+On Spot Drift Check,on_spot,Quick on-site visual and drift verification
+Premium Thread Inspection,new_arrival,Detailed thread inspection scope for premium connections
