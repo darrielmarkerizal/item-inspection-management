@@ -1,4 +1,4 @@
-import { getMasterData, getItems } from '@/services/masterData'
+import { getMasterData, getItems, createScopeOfWork } from '@/services/masterData'
 
 const state = () => ({
   serviceTypes: [],
@@ -44,6 +44,9 @@ const mutations = {
   SET_ERROR(state, error) {
     state.error = error
   },
+  ADD_SCOPE(state, scope) {
+    state.scopesOfWork.push(scope)
+  },
 }
 
 const actions = {
@@ -54,6 +57,12 @@ const actions = {
   async fetchItems({ commit }) {
     const response = await getItems()
     commit('SET_ITEMS', response.data)
+  },
+  async createScope({ commit }, payload) {
+    const response = await createScopeOfWork(payload)
+    commit('ADD_SCOPE', response.data)
+
+    return response.data
   },
   async prefetch({ commit, dispatch, state }) {
     if (state.loaded || state.loading) {
