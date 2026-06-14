@@ -8,6 +8,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  serverErrors: {
+    type: Object,
+    default: () => ({}),
+  },
 })
 
 const store = useStore()
@@ -57,13 +61,13 @@ defineExpose({ validate })
     require-asterisk-position="right"
   >
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
-      <el-form-item label="Service Type" prop="service_type">
+      <el-form-item label="Service Type" prop="service_type" :error="serverErrors.service_type">
         <el-select v-model="form.service_type" placeholder="Select service type" class="w-full">
           <el-option v-for="t in serviceTypes" :key="t.value" :label="t.label" :value="t.value" />
         </el-select>
       </el-form-item>
 
-      <el-form-item label="Scope of Work" prop="scope_of_work_id">
+      <el-form-item label="Scope of Work" prop="scope_of_work_id" :error="serverErrors.scope_of_work_id">
         <div class="flex gap-2 w-full">
           <el-select
             v-model="form.scope_of_work_id"
@@ -85,7 +89,7 @@ defineExpose({ validate })
     </el-form-item>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
-      <el-form-item label="Inspection Type" prop="inspection_type_id">
+      <el-form-item label="Inspection Type" prop="inspection_type_id" :error="serverErrors.inspection_type_id">
         <el-select
           v-model="form.inspection_type_id"
           placeholder="Select type"
@@ -96,19 +100,23 @@ defineExpose({ validate })
         </el-select>
       </el-form-item>
 
-      <el-form-item label="Customer" prop="customer_id">
+      <el-form-item label="Customer" prop="customer_id" :error="serverErrors.customer_id">
         <el-select v-model="form.customer_id" placeholder="Select customer" filterable class="w-full">
           <el-option v-for="c in customers" :key="c.id" :label="c.name" :value="c.id" />
         </el-select>
       </el-form-item>
 
-      <el-form-item label="Location" prop="location_id">
+      <el-form-item label="Location" prop="location_id" :error="serverErrors.location_id">
         <el-select v-model="form.location_id" placeholder="Select location" filterable class="w-full">
           <el-option v-for="l in locations" :key="l.id" :label="l.name" :value="l.id" />
         </el-select>
       </el-form-item>
 
-      <el-form-item label="Estimated Completion Date" prop="estimated_completion_date">
+      <el-form-item
+        label="Estimated Completion Date"
+        prop="estimated_completion_date"
+        :error="serverErrors.estimated_completion_date"
+      >
         <el-date-picker
           v-model="form.estimated_completion_date"
           type="date"
@@ -118,11 +126,11 @@ defineExpose({ validate })
         />
       </el-form-item>
 
-      <el-form-item label="Related To" prop="related_to">
+      <el-form-item label="Related To" prop="related_to" :error="serverErrors.related_to">
         <el-input v-model="form.related_to" placeholder="e.g. CO-02023-001" />
       </el-form-item>
 
-      <el-form-item label="DVC Code" prop="dvc_code">
+      <el-form-item label="DVC Code" prop="dvc_code" :error="serverErrors.dvc_code">
         <el-input v-model="form.dvc_code" placeholder="DVC code" />
       </el-form-item>
     </div>
@@ -137,7 +145,7 @@ defineExpose({ validate })
       </el-form-item>
     </div>
 
-    <el-form-item label="Note to Yard" prop="note_to_yard">
+    <el-form-item label="Note to Yard" prop="note_to_yard" :error="serverErrors.note_to_yard">
       <el-input v-model="form.note_to_yard" type="textarea" :rows="2" placeholder="Notes to yard" />
     </el-form-item>
 
