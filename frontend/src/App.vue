@@ -1,11 +1,16 @@
-<script setup></script>
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <el-container class="min-h-screen">
+    <el-header class="flex items-center border-b border-gray-200 bg-white">
+      <RouterLink to="/" class="text-lg font-semibold text-gray-800 no-underline">
+        Inspection Management
+      </RouterLink>
+    </el-header>
+    <el-main class="bg-gray-50">
+      <RouterView />
+    </el-main>
+  </el-container>
 </template>
-
-<style scoped></style>
