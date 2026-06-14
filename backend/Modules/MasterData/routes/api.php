@@ -3,6 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Modules\MasterData\Http\Controllers\MasterDataController;
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('masterdatas', MasterDataController::class)->names('masterdata');
+Route::prefix('v1')->group(function () {
+    Route::get('master-data', [MasterDataController::class, 'index'])->name('master-data');
 });

@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Inventory\Http\Controllers\InventoryController;
+use Modules\Inventory\Http\Controllers\ItemController;
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('inventories', InventoryController::class)->names('inventory');
+Route::prefix('v1')->group(function () {
+    Route::get('items', [ItemController::class, 'index'])->name('items');
 });
