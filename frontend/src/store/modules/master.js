@@ -15,6 +15,7 @@ const state = () => ({
   items: [],
   loaded: false,
   loading: false,
+  error: null,
 })
 
 const mutations = {
@@ -40,6 +41,9 @@ const mutations = {
   SET_LOADING(state, value) {
     state.loading = value
   },
+  SET_ERROR(state, error) {
+    state.error = error
+  },
 }
 
 const actions = {
@@ -57,9 +61,12 @@ const actions = {
     }
 
     commit('SET_LOADING', true)
+    commit('SET_ERROR', null)
     try {
       await Promise.all([dispatch('fetchMasterData'), dispatch('fetchItems')])
       commit('SET_LOADED', true)
+    } catch (error) {
+      commit('SET_ERROR', error?.message ?? 'Failed to load master data.')
     } finally {
       commit('SET_LOADING', false)
     }
