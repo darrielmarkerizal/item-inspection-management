@@ -38,4 +38,32 @@ class InspectionRepository
             ->pluck('total', 'status')
             ->toArray();
     }
+
+    public function create(array $attributes): Inspection
+    {
+        return Inspection::create($attributes);
+    }
+
+    public function update(Inspection $inspection, array $attributes): Inspection
+    {
+        $inspection->update($attributes);
+
+        return $inspection;
+    }
+
+    public function find(int|string $id): Inspection
+    {
+        return QueryBuilder::for(Inspection::class)
+            ->with([
+                'inspectionType',
+                'scopeOfWork.parameters',
+                'location',
+                'customer',
+                'items.item',
+                'items.lots',
+                'charges',
+            ])
+            ->allowedIncludes('statusHistories')
+            ->findOrFail($id);
+    }
 }
