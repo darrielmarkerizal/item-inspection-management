@@ -1,47 +1,61 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Test Case
-|--------------------------------------------------------------------------
-|
-| The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "pest()" function to bind a different classes or traits.
-|
-*/
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\Inventory\Database\Seeders\InventoryDatabaseSeeder;
+use Modules\MasterData\Database\Seeders\MasterDataDatabaseSeeder;
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(RefreshDatabase::class)
+    ->beforeEach(function () {
+        $this->seed([
+            MasterDataDatabaseSeeder::class,
+            InventoryDatabaseSeeder::class,
+        ]);
+    })
     ->in('Feature');
-
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
 
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
 
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
-*/
-
-function something()
+function inspectionPayload(array $overrides = []): array
 {
-    // ..
+    return array_merge([
+        'service_type' => 'new_arrival',
+        'inspection_type_id' => 1,
+        'scope_of_work_id' => 1,
+        'location_id' => 1,
+        'customer_id' => 1,
+        'related_to' => 'CO-02023-001',
+        'dvc_code' => '1100049832',
+        'charge_to_customer' => true,
+        'items' => [[
+            'item_id' => 1,
+            'qty_required' => 3,
+            'inspection_required' => true,
+            'lots' => [
+                ['item_lot_id' => 1, 'qty' => 2],
+            ],
+        ]],
+    ], $overrides);
+}
+
+function createInspection(array $overrides = []): int
+{
+    return test()->postJson('/api/v1/inspections', inspectionPayload($overrides))->json('data.id');
+}
+
+function createInspectionWithStatus(string $status): int
+{
+    $id = createInspection();
+
+    if (in_array($status, ['for_review', 'completed'], true)) {
+        test()->patchJson("/api/v1/inspections/{$id}/status", ['status' => 'for_review']);
+    }
+
+    if ($status === 'completed') {
+        test()->patchJson("/api/v1/inspections/{$id}/status", ['status' => 'completed']);
+    }
+
+    return $id;
 }
