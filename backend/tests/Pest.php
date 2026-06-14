@@ -31,10 +31,8 @@ function inspectionPayload(array $overrides = []): array
         'charge_to_customer' => true,
         'items' => [[
             'item_id' => 1,
-            'qty_required' => 3,
-            'inspection_required' => true,
             'lots' => [
-                ['item_lot_id' => 1, 'qty' => 2],
+                ['item_lot_id' => 1, 'qty_required' => 2, 'inspection_required' => true],
             ],
         ]],
     ], $overrides);

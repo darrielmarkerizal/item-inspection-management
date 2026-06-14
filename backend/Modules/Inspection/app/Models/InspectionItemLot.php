@@ -18,13 +18,15 @@ class InspectionItemLot extends Model
         'allocation',
         'owner',
         'condition',
-        'qty',
+        'qty_required',
+        'inspection_required',
     ];
 
     protected function casts(): array
     {
         return [
-            'qty' => 'decimal:2',
+            'qty_required' => 'decimal:2',
+            'inspection_required' => 'boolean',
         ];
     }
 

@@ -113,8 +113,6 @@ class InspectionService
             $inspectionItem = $inspection->items()->create([
                 'item_id' => $item?->id,
                 'item_description' => $item?->description,
-                'qty_required' => $itemData['qty_required'],
-                'inspection_required' => $itemData['inspection_required'] ?? true,
             ]);
 
             foreach ($itemData['lots'] as $lotData) {
@@ -126,7 +124,8 @@ class InspectionService
                     'allocation' => $lot?->allocation?->name,
                     'owner' => $lot?->owner?->name,
                     'condition' => $lot?->condition?->name,
-                    'qty' => $lotData['qty'],
+                    'qty_required' => $lotData['qty_required'],
+                    'inspection_required' => $lotData['inspection_required'] ?? true,
                 ]);
             }
         }

@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('allocation')->nullable();  // snapshot
             $table->string('owner')->nullable();       // snapshot
             $table->string('condition')->nullable();   // snapshot
-            $table->decimal('qty', 12, 2)->default(0);
+            $table->decimal('qty_required', 12, 2)->default(0);
+            $table->boolean('inspection_required')->default(true);
             $table->timestamps();
         });
     }

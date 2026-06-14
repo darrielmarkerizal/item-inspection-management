@@ -16,8 +16,6 @@ return new class extends Migration
             $table->foreignId('inspection_id')->constrained('inspections')->cascadeOnDelete();
             $table->foreignId('item_id')->nullable()->constrained('items')->nullOnDelete();
             $table->string('item_description')->nullable(); // snapshot
-            $table->decimal('qty_required', 12, 2)->default(0); // sampling qty
-            $table->boolean('inspection_required')->default(true);
             $table->timestamps();
         });
     }

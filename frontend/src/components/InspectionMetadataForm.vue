@@ -49,7 +49,13 @@ defineExpose({ validate })
 </script>
 
 <template>
-  <el-form ref="formRef" :model="form" :rules="rules" label-position="top">
+  <el-form
+    ref="formRef"
+    :model="form"
+    :rules="rules"
+    label-position="top"
+    require-asterisk-position="right"
+  >
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
       <el-form-item label="Service Type" prop="service_type">
         <el-select v-model="form.service_type" placeholder="Select service type" class="w-full">

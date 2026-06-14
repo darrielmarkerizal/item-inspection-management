@@ -3,6 +3,7 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import InspectionMetadataForm from '@/components/InspectionMetadataForm.vue'
+import OrderInformation from '@/components/OrderInformation.vue'
 
 const router = useRouter()
 const metadataRef = ref(null)
@@ -21,6 +22,41 @@ const form = reactive({
   items: [],
 })
 
+function validateItems() {
+  if (!form.items.length) {
+    ElMessage.error('Add at least one item')
+
+    return false
+  }
+
+  for (const item of form.items) {
+    if (!item.item_id) {
+      ElMessage.error('Select an item for each row')
+
+      return false
+    }
+    if (!item.lots.length) {
+      ElMessage.error('Add at least one lot per item')
+
+      return false
+    }
+    for (const lot of item.lots) {
+      if (!lot.item_lot_id) {
+        ElMessage.error('Resolve every lot via Lot / Allocation / Owner / Condition')
+
+        return false
+      }
+      if (lot.qty_required == null || lot.qty_required < 0) {
+        ElMessage.error('Qty required must be zero or more')
+
+        return false
+      }
+    }
+  }
+
+  return true
+}
+
 async function onSubmit() {
   try {
     await metadataRef.value.validate()
@@ -28,16 +64,24 @@ async function onSubmit() {
     return
   }
 
-  ElMessage.info('Metadata valid. Order items and submit arrive in #13/#14.')
+  if (!validateItems()) {
+    return
+  }
+
+  ElMessage.info('Form valid. Submit wiring arrives in #14.')
 }
 </script>
 
 <template>
-  <div class="max-w-4xl">
+  <div class="max-w-5xl">
     <h2 class="text-xl font-semibold mb-4">Create Inspection</h2>
 
-    <el-card>
+    <el-card class="mb-4">
       <InspectionMetadataForm ref="metadataRef" :form="form" />
+    </el-card>
+
+    <el-card>
+      <OrderInformation :items="form.items" />
     </el-card>
 
     <div class="flex justify-end gap-2 mt-4">
