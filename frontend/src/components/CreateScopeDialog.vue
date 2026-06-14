@@ -55,7 +55,13 @@ async function submit() {
 
 <template>
   <el-dialog v-model="visible" title="Create Scope of Work" width="500">
-    <el-form ref="formRef" :model="form" :rules="rules" label-position="top">
+    <el-form
+      ref="formRef"
+      :model="form"
+      :rules="rules"
+      label-position="top"
+      require-asterisk-position="right"
+    >
       <el-form-item label="Name" prop="name">
         <el-input v-model="form.name" placeholder="Scope name" />
       </el-form-item>

@@ -16,7 +16,8 @@ class InspectionItemLotResource extends JsonResource
             'allocation' => $this->allocation,
             'owner' => $this->owner,
             'condition' => $this->condition,
-            'qty' => $this->qty,
+            'qty_required' => $this->qty_required,
+            'inspection_required' => $this->inspection_required,
         ];
     }
 }

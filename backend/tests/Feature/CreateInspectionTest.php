@@ -20,6 +20,7 @@ it('persists nested items and lots with snapshot values', function () {
         'lot_no' => 'MMT306247201',
         'owner' => 'PT Santosa',
         'condition' => 'Good',
+        'qty_required' => 2,
     ]);
 });
 
@@ -64,9 +65,18 @@ it('rejects an invalid service type', function () {
 
 it('rejects a negative quantity', function () {
     $payload = inspectionPayload();
-    $payload['items'][0]['qty_required'] = -1;
+    $payload['items'][0]['lots'][0]['qty_required'] = -1;
 
     $this->postJson('/api/v1/inspections', $payload)
         ->assertStatus(422)
-        ->assertJsonValidationErrors('items.0.qty_required');
+        ->assertJsonValidationErrors('items.0.lots.0.qty_required');
+});
+
+it('rejects a qty that exceeds the available stock', function () {
+    $payload = inspectionPayload();
+    $payload['items'][0]['lots'][0]['qty_required'] = 999999;
+
+    $this->postJson('/api/v1/inspections', $payload)
+        ->assertStatus(422)
+        ->assertJsonValidationErrors('items.0.lots.0.qty_required');
 });

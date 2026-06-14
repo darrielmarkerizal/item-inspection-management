@@ -18,8 +18,6 @@ class InspectionItemResource extends JsonResource
                 'unit' => $this->item->unit,
             ] : null,
             'item_description' => $this->item_description,
-            'qty_required' => $this->qty_required,
-            'inspection_required' => $this->inspection_required,
             'lots' => InspectionItemLotResource::collection($this->whenLoaded('lots')),
         ];
     }

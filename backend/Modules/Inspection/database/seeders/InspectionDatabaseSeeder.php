@@ -100,8 +100,6 @@ class InspectionDatabaseSeeder extends Seeder
             $inspectionItem = $inspection->items()->create([
                 'item_id' => $item->id,
                 'item_description' => $item->description,
-                'qty_required' => 3,
-                'inspection_required' => true,
             ]);
 
             // Snapshot each lot onto the inspection item.
@@ -112,7 +110,8 @@ class InspectionDatabaseSeeder extends Seeder
                     'allocation' => $lot->allocation?->name,
                     'owner' => $lot->owner?->name,
                     'condition' => $lot->condition?->name,
-                    'qty' => 3,
+                    'qty_required' => 3,
+                    'inspection_required' => true,
                 ]);
             }
         }

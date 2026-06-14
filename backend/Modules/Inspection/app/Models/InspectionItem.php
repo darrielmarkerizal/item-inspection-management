@@ -16,17 +16,7 @@ class InspectionItem extends Model
         'inspection_id',
         'item_id',
         'item_description',
-        'qty_required',
-        'inspection_required',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'qty_required' => 'decimal:2',
-            'inspection_required' => 'boolean',
-        ];
-    }
 
     public function inspection(): BelongsTo
     {

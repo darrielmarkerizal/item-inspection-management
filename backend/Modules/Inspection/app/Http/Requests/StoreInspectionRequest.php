@@ -2,9 +2,11 @@
 
 namespace Modules\Inspection\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Modules\Core\Enums\ServiceType;
+use Modules\Inventory\Models\ItemLot;
 
 class StoreInspectionRequest extends FormRequest
 {
@@ -29,11 +31,35 @@ class StoreInspectionRequest extends FormRequest
             'note_to_yard' => ['nullable', 'string'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.item_id' => ['required', 'integer', 'exists:items,id'],
-            'items.*.qty_required' => ['required', 'numeric', 'min:0'],
-            'items.*.inspection_required' => ['boolean'],
             'items.*.lots' => ['required', 'array', 'min:1'],
             'items.*.lots.*.item_lot_id' => ['required', 'integer', 'exists:item_lots,id'],
-            'items.*.lots.*.qty' => ['required', 'numeric', 'min:0'],
+            'items.*.lots.*.qty_required' => ['required', 'numeric', 'min:0'],
+            'items.*.lots.*.inspection_required' => ['boolean'],
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            foreach ($this->input('items', []) as $itemIndex => $item) {
+                foreach ($item['lots'] ?? [] as $lotIndex => $lot) {
+                    $lotId = $lot['item_lot_id'] ?? null;
+                    $qty = $lot['qty_required'] ?? null;
+
+                    if ($lotId === null || $qty === null) {
+                        continue;
+                    }
+
+                    $available = ItemLot::whereKey($lotId)->value('available_qty');
+
+                    if ($available !== null && (float) $qty > (float) $available) {
+                        $validator->errors()->add(
+                            "items.{$itemIndex}.lots.{$lotIndex}.qty_required",
+                            "Qty required ({$qty}) cannot exceed available qty ({$available})."
+                        );
+                    }
+                }
+            }
+        });
     }
 }
