@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Modules\Core\Exceptions\InvalidStatusTransitionException;
 use Modules\Core\Exceptions\InspectionNotEditableException;
 use Modules\Core\Http\Responses\ApiResponse;
+use Spatie\QueryBuilder\Exceptions\InvalidQuery;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -34,6 +35,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $exceptions->render(function (ValidationException $e) {
             return ApiResponse::unprocessable($e->errors());
+        });
+
+        $exceptions->render(function (InvalidQuery $e) {
+            return ApiResponse::error($e->getMessage(), null, 400);
         });
 
     })->create();
