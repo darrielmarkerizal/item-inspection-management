@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { useMediaQuery } from '@vueuse/core'
 import StatusTag from '@/components/StatusTag.vue'
 import StatusActions from '@/components/StatusActions.vue'
 
@@ -16,6 +17,9 @@ const error = ref(null)
 const inspection = computed(() => store.state.inspections.current)
 const loading = computed(() => store.state.inspections.loading)
 const ready = computed(() => inspection.value && String(inspection.value.id) === String(props.id))
+
+const isNarrow = useMediaQuery('(max-width: 768px)')
+const descriptionColumns = computed(() => (isNarrow.value ? 1 : 3))
 
 async function load() {
   error.value = null
@@ -68,7 +72,7 @@ onMounted(load)
 
         <el-divider />
 
-        <el-descriptions :column="3" border>
+        <el-descriptions :column="descriptionColumns" border>
           <el-descriptions-item label="Inspection Type">
             {{ inspection.inspection_type?.name ?? '-' }}
           </el-descriptions-item>

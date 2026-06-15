@@ -62,27 +62,31 @@ watch(
     </div>
 
     <template v-if="item.item_id">
-      <div class="grid grid-cols-12 gap-2 text-xs text-gray-500 font-medium mb-1">
-        <div class="col-span-2">Lot</div>
-        <div class="col-span-2">Allocation</div>
-        <div class="col-span-2">Owner</div>
-        <div class="col-span-2">Condition</div>
-        <div class="col-span-1">Avail</div>
-        <div class="col-span-1">Qty Req</div>
-        <div class="col-span-1">Insp</div>
-        <div class="col-span-1"></div>
+      <div class="overflow-x-auto">
+        <div class="min-w-[760px]">
+          <div class="grid grid-cols-12 gap-2 text-xs text-gray-500 font-medium mb-1">
+            <div class="col-span-2">Lot</div>
+            <div class="col-span-2">Allocation</div>
+            <div class="col-span-2">Owner</div>
+            <div class="col-span-2">Condition</div>
+            <div class="col-span-1">Avail</div>
+            <div class="col-span-1">Qty Req</div>
+            <div class="col-span-1">Insp</div>
+            <div class="col-span-1"></div>
+          </div>
+
+          <LotSelector
+            v-for="(lot, index) in item.lots"
+            :key="index"
+            :lot="lot"
+            :item-lots="itemLots"
+            class="mb-2"
+            @remove="removeLot(index)"
+          />
+        </div>
       </div>
 
-      <LotSelector
-        v-for="(lot, index) in item.lots"
-        :key="index"
-        :lot="lot"
-        :item-lots="itemLots"
-        class="mb-2"
-        @remove="removeLot(index)"
-      />
-
-      <el-button size="small" @click="addLot">+ Add Lot</el-button>
+      <el-button size="small" class="mt-2" @click="addLot">+ Add Lot</el-button>
     </template>
   </el-card>
 </template>
