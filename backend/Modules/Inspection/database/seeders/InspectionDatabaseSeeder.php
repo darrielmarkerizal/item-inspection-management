@@ -3,6 +3,7 @@
 namespace Modules\Inspection\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 use Modules\Core\Enums\InspectionStatus;
 use Modules\Core\Enums\ServiceType;
 use Modules\Inspection\Models\Inspection;
@@ -62,6 +63,52 @@ class InspectionDatabaseSeeder extends Seeder
             'item_codes' => ['6214-00220-02-PJ-01-XAS-012'],
             'charges' => [],
         ]);
+
+        $this->seedVolume();
+    }
+
+    private function seedVolume(): void
+    {
+        $serviceTypes = [ServiceType::NEW_ARRIVAL, ServiceType::MAINTENANCE, ServiceType::ON_SPOT];
+        $inspectionTypes = ['Reg Prep', 'Full Length Inspection', 'Thread Inspection', 'Re-Inspection', 'Cleaning & Drifting'];
+        $scopes = ['New Arrival Full Inspection', 'Maintenance Re-Inspection', 'On Spot Drift Check', 'Premium Thread Inspection'];
+        $locations = ['Moomba', 'Dampier', 'Karratha', 'Darwin Supply Base', 'Surabaya Yard'];
+        $customers = ['PT Santosa', 'PT Sentosa Energy', 'Santos Ltd', 'PT Pertamina Hulu', 'Woodside Energy'];
+        $itemCodes = [
+            '6203-00640-03-PQ-03-XAS-001', '6203-00640-03-PQ-03-XAS-036', '6205-00210-01-TB-02-XAS-014',
+            '6210-00115-05-XO-01-XAS-003', '6203-00781-02-PQ-04-XAS-009', '6203-00990-01-PQ-02-XAS-021',
+            '6205-00330-03-TB-01-XAS-047', '6208-00500-02-DP-01-XAS-005', '6212-00055-01-CP-01-XAS-100',
+            '6214-00220-02-PJ-01-XAS-012',
+        ];
+
+        $statuses = array_merge(
+            array_fill(0, 20, InspectionStatus::OPEN),
+            array_fill(0, 9, InspectionStatus::FOR_REVIEW),
+            array_fill(0, 7, InspectionStatus::COMPLETED),
+        );
+
+        $base = Carbon::create(2026, 1, 6);
+
+        foreach ($statuses as $i => $status) {
+            $sequence = $i + 4;
+            $submitted = $base->copy()->addDays(($i * 7) % 120);
+
+            $this->makeInspection([
+                'request_no' => 'REQ-2026-'.str_pad((string) $sequence, 4, '0', STR_PAD_LEFT),
+                'service_type' => $serviceTypes[$i % 3],
+                'inspection_type' => $inspectionTypes[$i % count($inspectionTypes)],
+                'scope' => $scopes[$i % count($scopes)],
+                'location' => $locations[$i % count($locations)],
+                'customer' => $customers[$i % count($customers)],
+                'related_to' => 'CO-02023-'.str_pad((string) (40 + $i), 3, '0', STR_PAD_LEFT),
+                'dvc_code' => (string) (1100050000 + $i),
+                'status' => $status,
+                'date_submitted' => $submitted->toDateString(),
+                'estimated_completion_date' => $submitted->copy()->addDays(21)->toDateString(),
+                'item_codes' => [$itemCodes[$i % count($itemCodes)]],
+                'charges' => [],
+            ]);
+        }
     }
 
     private function makeInspection(array $data): void
@@ -76,8 +123,8 @@ class InspectionDatabaseSeeder extends Seeder
                 'customer_id' => Customer::where('name', $data['customer'])->value('id'),
                 'related_to' => $data['related_to'],
                 'dvc_code' => $data['dvc_code'],
-                'date_submitted' => '2026-05-01',
-                'estimated_completion_date' => '2026-05-05',
+                'date_submitted' => $data['date_submitted'] ?? '2026-05-01',
+                'estimated_completion_date' => $data['estimated_completion_date'] ?? '2026-05-05',
                 'status' => $data['status'],
                 'charge_to_customer' => ! empty($data['charges']),
             ]
