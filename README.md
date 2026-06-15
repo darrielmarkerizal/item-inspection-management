@@ -130,6 +130,6 @@ Master data is read from CSV rather than `.xlsx`, and the SPA assumes it's serve
 
 ## Demo video
 
-_Walkthrough:_ **<add link>**
+_Walkthrough:_ **https://youtu.be/ETU9L2Vi9kM**
 
 Roughly: the list with its tabs and sorting; creating an inspection — metadata, a scope made on the fly, the cascading order items; then the detail page, walked through Submit for Review and Complete with the history timeline filling in behind it.
